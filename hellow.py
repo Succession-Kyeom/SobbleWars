@@ -2,8 +2,8 @@ import pygame
 import sys  # sys 모듈 임포트하기
 
 # 이미지 로드하기
-image_buble = pygame.image.load('C:image//buble.png')
-image_sound = pygame.image.load('C:image//sound.png')
+image_buble = pygame.image.load('/Users/dongwook0610/Desktop/pythonworkspace/buble.png')
+image_sound = pygame.image.load('/Users/dongwook0610/Desktop/pythonworkspace/sound.png')
 
 image = pygame.transform.scale(image, (int(ext[0] * size), int(ext[1] * size)))
 
