@@ -88,6 +88,7 @@ while(roop):
 
     screen.fill(BLACK)
     if state == 0:
+
         screen.blit(story[index], (0, 0))
     elif state == 1:
         startButton = Button(start[0], start[1], start[2], 1070, 570, startSize[0], startSize[1], GameStart)
