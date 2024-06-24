@@ -127,41 +127,7 @@ image_load()
 sound_load()
 font_load()
 
-# 초기 위치 설정
-x1, y1 = 0, 320
-x2, y2 = 1040, 320
 
-#라이프스코어 리스트 초기화
-lifescore_list1 = [image_lifescore, image_lifescore, image_lifescore, image_lifescore, image_lifescore]
-lifescore_count1 = 5
-lifescore_list2 = [image_lifescore, image_lifescore, image_lifescore, image_lifescore, image_lifescore]
-lifescore_count2 = 5
-
-
-# 미사일 리스트 초기화
-buble_missile_list = []
-sound_missile_list = []
-
-last_buble_missile1_time = 0
-last_buble_missile2_time = 0
-last_sound_missile1_time = 0
-last_sound_missile2_time = 0
-
-#라이프 시간용 변수
-lifescore_time1 = 0
-lifescore_time2 = 0
-
-#무적 상태 변수
-invinsible_state1 = 0
-invinsible_state2 = 0
-
-#무적 상태 시간
-invinsible_time1 = 0
-invinsible_time2 = 0
-
-#무적 상태 flip flop counter
-invinsible_count1 = 0
-invinsible_count2 = 0
 
 
 
@@ -196,152 +162,183 @@ def check_collision(buble_missile_list, sound_missile_list):
 timer = time.time()
 time_script = ''
 
-# 메인 루프 시작하기
-# 메인 루프 시작하기
-running = True
-while running:
+def GameStart():
+    # 초기 위치 설정
+    x1, y1 = 0, 320
+    x2, y2 = 1040, 320
 
-    current_time = time.time()
+    # 라이프스코어 리스트 초기화
+    lifescore_list1 = [image_lifescore, image_lifescore, image_lifescore, image_lifescore, image_lifescore]
+    lifescore_count1 = 5
+    lifescore_list2 = [image_lifescore, image_lifescore, image_lifescore, image_lifescore, image_lifescore]
+    lifescore_count2 = 5
 
-    time_script = "{}".format((int)(40 - current_time + timer))
-    text_surface = font.render(time_script, True, (0, 0, 0))  # 검은색 텍스트 렌더링
+    # 미사일 리스트 초기화
+    buble_missile_list = []
+    sound_missile_list = []
+
+    last_buble_missile1_time = 0
+    last_buble_missile2_time = 0
+    last_sound_missile1_time = 0
+    last_sound_missile2_time = 0
+
+    # 라이프 시간용 변수
+    lifescore_time1 = 0
+    lifescore_time2 = 0
+
+    # 무적 상태 변수
+    invinsible_state1 = 0
+    invinsible_state2 = 0
+
+    # 무적 상태 시간
+    invinsible_time1 = 0
+    invinsible_time2 = 0
+
+    # 무적 상태 flip flop counter
+    invinsible_count1 = 0
+    invinsible_count2 = 0
+    # 메인 루프 시작하기
+    running = True
+    while running:
+
+        current_time = time.time()
+
+        time_script = "{}".format((int)(40 - current_time + timer))
+        text_surface = font.render(time_script, True, (0, 0, 0))  # 검은색 텍스트 렌더링
 
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w and y1 > 80:
-                y1 -= 240 # w를 누르면 위로 이동
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w and y1 > 80:
+                    y1 -= 240 # w를 누르면 위로 이동
 
-            elif event.key == pygame.K_s and y1 < 560:
-                y1 += 240  # s를 누르면 아래로 이동
-            if event.key == pygame.K_UP and y2 > 80:
-                y2 -= 240  # UP 키를 누르면 위로 이동
-            elif event.key == pygame.K_DOWN and y2 < 560:   
-                y2 += 240  # DOWN 키를 누르면 아래로 이동
-            if event.key == (pygame.K_a) and (current_time - last_buble_missile1_time) >= 0.7:
-                sound_buble_creation.play()
-                Missile_x = x1 + image_buble.get_width()
-                Missile_y = y1 + 45
-                buble_missile_list.append(Missile(Missile_x, Missile_y, 13, image_buble_missile1, 'buble_missile1'))
-                last_buble_missile1_time = current_time
+                elif event.key == pygame.K_s and y1 < 560:
+                    y1 += 240  # s를 누르면 아래로 이동
+                if event.key == pygame.K_UP and y2 > 80:
+                    y2 -= 240  # UP 키를 누르면 위로 이동
+                elif event.key == pygame.K_DOWN and y2 < 560:
+                    y2 += 240  # DOWN 키를 누르면 아래로 이동
+                if event.key == (pygame.K_a) and (current_time - last_buble_missile1_time) >= 0.7:
+                    sound_buble_creation.play()
+                    Missile_x = x1 + image_buble.get_width()
+                    Missile_y = y1 + 45
+                    buble_missile_list.append(Missile(Missile_x, Missile_y, 13, image_buble_missile1, 'buble_missile1'))
+                    last_buble_missile1_time = current_time
 
-            if event.key == pygame.K_d and (current_time - last_buble_missile2_time) >= 1.0:
-                sound_buble_creation.play()
-                Missile_x = x1 + image_buble.get_width()
-                Missile_y = y1 + 14
-                buble_missile_list.append(Missile(Missile_x, Missile_y, 13, image_buble_missile2, 'buble_missile2'))
-                last_buble_missile2_time = current_time
+                if event.key == pygame.K_d and (current_time - last_buble_missile2_time) >= 1.0:
+                    sound_buble_creation.play()
+                    Missile_x = x1 + image_buble.get_width()
+                    Missile_y = y1 + 14
+                    buble_missile_list.append(Missile(Missile_x, Missile_y, 13, image_buble_missile2, 'buble_missile2'))
+                    last_buble_missile2_time = current_time
 
-            if event.key == pygame.K_LEFT and (current_time - last_sound_missile1_time) >= 0.7:
-                sound_sound_creation.play()
-                Missile_x = x2 
-                Missile_y = y2 + 45
-                sound_missile_list.append(Missile(Missile_x, Missile_y, -13, image_sound_missile1, 'sound_missile1'))
-                last_sound_missile1_time = current_time
+                if event.key == pygame.K_LEFT and (current_time - last_sound_missile1_time) >= 0.7:
+                    sound_sound_creation.play()
+                    Missile_x = x2
+                    Missile_y = y2 + 45
+                    sound_missile_list.append(Missile(Missile_x, Missile_y, -13, image_sound_missile1, 'sound_missile1'))
+                    last_sound_missile1_time = current_time
 
-            if event.key == pygame.K_RIGHT and (current_time - last_sound_missile2_time) >= 1.0:
-                sound_sound_creation.play()
-                Missile_x = x2
-                Missile_y = y2 + 14
-                sound_missile_list.append(Missile(Missile_x, Missile_y, -13, image_sound_missile2, 'sound_missile2'))
-                last_sound_missile2_time = current_time
+                if event.key == pygame.K_RIGHT and (current_time - last_sound_missile2_time) >= 1.0:
+                    sound_sound_creation.play()
+                    Missile_x = x2
+                    Missile_y = y2 + 14
+                    sound_missile_list.append(Missile(Missile_x, Missile_y, -13, image_sound_missile2, 'sound_missile2'))
+                    last_sound_missile2_time = current_time
 
-    screen.fill((255, 255, 255))  # 배경색상 설정하기
-    screen.blit(image_background, (0, 0))  # 배경 그리기
-    screen.blit(text_surface, ((image_background.get_width() - text_surface.get_width())/2, 26))
+        screen.fill((255, 255, 255))  # 배경색상 설정하기
+        screen.blit(image_background, (0, 0))  # 배경 그리기
+        screen.blit(text_surface, ((image_background.get_width() - text_surface.get_width())/2, 26))
 
-    screen.blit(image_buble, (x1, y1))  # 이미지를 새로운 위치에 그리기
-    screen.blit(image_sound, (x2, y2))  # 다른 이미지를 새로운 위치에 그리기
+        screen.blit(image_buble, (x1, y1))  # 이미지를 새로운 위치에 그리기
+        screen.blit(image_sound, (x2, y2))  # 다른 이미지를 새로운 위치에 그리기
 
-    # 미사일 그리기 및 이동
-    for missile in buble_missile_list:
-        missile.move()
-        missile.draw(screen)
-    
-    for missile in sound_missile_list:
-        missile.move()
-        missile.draw(screen)
-    
-    # 충돌 감지 및 제거
-    check_collision(buble_missile_list, sound_missile_list)
+        # 미사일 그리기 및 이동
+        for missile in buble_missile_list:
+            missile.move()
+            missile.draw(screen)
 
-    # 화면 밖으로 나간 미사일 제거 및 라이프 감소
-    new_buble_missile_list = []
-    for missile in buble_missile_list:
-        if missile.x < 1280:
-            new_buble_missile_list.append(missile)
-        else:
-            lifescore_count2 -= 1
-            if (len(lifescore_list2) != 0)and(current_time - lifescore_time2 > 1.5):
-                lifescore_list2.pop()
-                lifescore_time2 = current_time
-                invinsible_state2 = 1
-                invinsible_time2 = current_time
-                image_sound.set_alpha(168)
-                
-    
-    new_sound_missile_list = []
-    for missile in sound_missile_list:
-        if missile.x > 0:
-            new_sound_missile_list.append(missile)
-        else:
-            lifescore_count1 -= 1
-            if (len(lifescore_list1) != 0)and(current_time - lifescore_time1 >= 1.6):
-                lifescore_list1.pop()
-                lifescore_time1 = current_time
-                invinsible_state1 = 1
+        for missile in sound_missile_list:
+            missile.move()
+            missile.draw(screen)
+
+        # 충돌 감지 및 제거
+        check_collision(buble_missile_list, sound_missile_list)
+
+        # 화면 밖으로 나간 미사일 제거 및 라이프 감소
+        new_buble_missile_list = []
+        for missile in buble_missile_list:
+            if missile.x < 1280:
+                new_buble_missile_list.append(missile)
+            else:
+                lifescore_count2 -= 1
+                if (len(lifescore_list2) != 0)and(current_time - lifescore_time2 > 1.5):
+                    lifescore_list2.pop()
+                    lifescore_time2 = current_time
+                    invinsible_state2 = 1
+                    invinsible_time2 = current_time
+                    image_sound.set_alpha(168)
+
+
+        new_sound_missile_list = []
+        for missile in sound_missile_list:
+            if missile.x > 0:
+                new_sound_missile_list.append(missile)
+            else:
+                lifescore_count1 -= 1
+                if (len(lifescore_list1) != 0)and(current_time - lifescore_time1 >= 1.6):
+                    lifescore_list1.pop()
+                    lifescore_time1 = current_time
+                    invinsible_state1 = 1
+                    invinsible_time1 = current_time
+                    image_buble.set_alpha(168)
+
+        if invinsible_state1 == 1:
+
+            if (invinsible_count1%2 == 0)and(current_time - invinsible_time1 >= 0.4):
+                image_buble.set_alpha(255)
+                invinsible_count1 += 1
                 invinsible_time1 = current_time
+
+                if (invinsible_count1%3 == 0):
+                    invinsible_state1 = 0
+                    invinsible_count1 = 0
+
+            elif (invinsible_count1%2 == 1)and(current_time - invinsible_time1 >= 0.4):
                 image_buble.set_alpha(168)
-                
-    if invinsible_state1 == 1:
-
-        if (invinsible_count1%2 == 0)and(current_time - invinsible_time1 >= 0.4):
-            image_buble.set_alpha(255)
-            invinsible_count1 += 1
-            invinsible_time1 = current_time
-
-            if (invinsible_count1%3 == 0):
-                invinsible_state1 = 0
-                invinsible_count1 = 0
-
-        elif (invinsible_count1%2 == 1)and(current_time - invinsible_time1 >= 0.4):
-            image_buble.set_alpha(168)
-            invinsible_count1 += 1
-            invinsible_time1 = current_time
+                invinsible_count1 += 1
+                invinsible_time1 = current_time
 
 
-    if invinsible_state2 == 1:
+        if invinsible_state2 == 1:
 
-        if (invinsible_count2%2 == 0)and(current_time - invinsible_time2 >= 0.4):
-            image_sound.set_alpha(255)
-            invinsible_count2 += 1
-            invinsible_time2 = current_time
+            if (invinsible_count2%2 == 0)and(current_time - invinsible_time2 >= 0.4):
+                image_sound.set_alpha(255)
+                invinsible_count2 += 1
+                invinsible_time2 = current_time
 
-            if (invinsible_count2%3 == 0):
-                invinsible_state2 = 0
-                invinsible_count2 = 0
+                if (invinsible_count2%3 == 0):
+                    invinsible_state2 = 0
+                    invinsible_count2 = 0
 
-        elif (invinsible_count2%2 == 1)and(current_time - invinsible_time2 >= 0.4):
-            image_sound.set_alpha(168)
-            invinsible_count2 += 1
-            invinsible_time2 = current_time
+            elif (invinsible_count2%2 == 1)and(current_time - invinsible_time2 >= 0.4):
+                image_sound.set_alpha(168)
+                invinsible_count2 += 1
+                invinsible_time2 = current_time
 
-    buble_missile_list = new_buble_missile_list
-    sound_missile_list = new_sound_missile_list
+        buble_missile_list = new_buble_missile_list
+        sound_missile_list = new_sound_missile_list
 
-    # 생명 이미지 그리기
-    for i, _ in enumerate(lifescore_list1):
-        screen.blit(image_lifescore, (26 + i * 80, 26))
+        # 생명 이미지 그리기
+        for i, _ in enumerate(lifescore_list1):
+            screen.blit(image_lifescore, (26 + i * 80, 26))
 
-    for i, _ in enumerate(lifescore_list2):
-        screen.blit(image_lifescore, (1200 - i * 80, 26))  # y 좌표를 다르게 해서 겹치지 않게 설정
+        for i, _ in enumerate(lifescore_list2):
+            screen.blit(image_lifescore, (1200 - i * 80, 26))  # y 좌표를 다르게 해서 겹치지 않게 설정
 
-    
 
-    pygame.display.update()  # 화면 업데이트하기
-    clock.tick(60)  # 프레임 레이트 설정하기
 
-pygame.quit()
-sys.exit()
+        pygame.display.update()  # 화면 업데이트하기
+        clock.tick(60)  # 프레임 레이트 설정하기
