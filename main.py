@@ -1,6 +1,7 @@
 import pygame
-import time
 import sys
+
+from Button import Button
 
 ##pygame 초기화
 pygame.init()
@@ -20,39 +21,40 @@ screen = pygame.display.set_mode(size)
 #스크린 이름 설정
 pygame.display.set_caption("소음을 부르는 달밤의 비눗방울 대전쟁")
 
-#이미지 로드
-startImage = pygame.image.load("C:\\Users\\user\\PycharmProjects\\SobbleWars\\image\\게임시작.png")
-endImage = pygame.image.load("C:\\Users\\user\\PycharmProjects\\SobbleWars\\image\\게임종료.png")
+#이미지 로드 및 크기 설정
+
+startImage = pygame.image.load("C:image\\start_btn.png")
+startImageOn = pygame.image.load("C:image\\start_onmouse.png")
+startImageClick = pygame.image.load("C:image\\start_clicked.png")
+start = (startImage, startImageOn, startImageClick)
+startSize = start[0].get_size()
+
+aboutImage = pygame.image.load("C:image\\about_btn.png")
+aboutImageOn = pygame.image.load("C:image\\about_onmouse.png")
+aboutImageClick = pygame.image.load("C:image\\about_clicked.png")
+about = (aboutImage, aboutImageOn, aboutImageClick)
+aboutSize = about[0].get_size()
 
 #초 당 설정
 roop = True
 clock = pygame.time.Clock()
 #####
 
+#게임 시작
+def GameStart():
+    print("call game start")
+    while(True):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                Quit()
+        screen.fill(WHITE)
+
+        pygame.display.update()
+
+#게임 종료
 def Quit():
     pygame.quit()
     sys.exit()
-
-#버튼 클래스
-class Button:
-    def __init__(self, image, x, y, width, height, action=None):
-        mouse = pygame.mouse.get_pos()  # 마우스 좌표 mouse = [mouse_x, mouse_y]
-        click = pygame.mouse.get_pressed()  # 마우스 클릭 확인 click = [left, wheel, right]
-
-        if x <= mouse[0] <= x + width and y <= mouse[1] <= y + height: #마우스 좌표가 버튼 내부일 때
-            screen.blit(image, (x, y)) #활성화 이미지로 변경
-            if click[0] and action != None: #클릭 시
-                time.sleep(1) #n초 지연
-                action()
-        else: #마우스 좌표가 버튼 외부일 때
-            screen.blit(image, (x, y))
-
-def MainMenu():
-    while (True):
-        startButton = Button(startImage, 500, 40, 100, 40, None)
-        endButton = Button(endImage, 800, 40, 100, 40, None)
-
-    return select
 
 ##메인 루프
 while(roop):
@@ -64,14 +66,13 @@ while(roop):
         if event.type == pygame.QUIT: #이벤트 == 종료 일 경우
             roop = False #루프 탈출
 
-    #스크린 채우기
     screen.fill(BLACK)
-
-    startButton = Button(startImage, 500, 40, 100, 40, None)
-    endButton = Button(endImage, 800, 40, 100, 40, Quit())
+    startButton = Button(start[0], start[1], start[2], 540, 370, startSize[0], startSize[1], GameStart)
+    aboutButton = Button(about[0], about[1], about[2], 540, 500, aboutSize[0], aboutSize[1], Quit)
 
     #*중요* 화면 업데이트
+    pygame.display.update()
     pygame.display.flip()
 
 #종료
-pygame.quit()
+Quit()
