@@ -13,12 +13,12 @@ class Button:
         act = False
 
         screen.blit(image, (x, y))
-        if x <= mouse[0] <= x + width and y <= mouse[1] <= y + height: #마우스 좌표가 버튼 내부일 때
+        if x <= mouse[0] <= (x + width) and y <= mouse[1] <= (y + height): #마우스 좌표가 버튼 내부일 때
             screen.blit(imageOn, (x, y)) #활성화 이미지로 변경
-            if(click[0] and action != None):
-                screen.blit(imageClick, (x, y))
+            if click[0] and action != None:
                 act = True
-            if(click[0] == 0 and act == True):
+                screen.blit(imageClick, (x, y))
+#            if click[0] == 0 and act == True:
                 action()
         else: #마우스 좌표가 버튼 외부일 때
             screen.blit(image, (x, y))
