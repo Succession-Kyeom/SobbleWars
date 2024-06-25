@@ -3,7 +3,7 @@ import sys
 import os
 import time
 
-from hellow import GameStart
+#from hellow import GameStart
 
 def image_scaling(self):
     size = 8/3
@@ -141,11 +141,6 @@ clock = pygame.time.Clock()
 # 이미지 로드하기
 image_load()
 sound_load()
-
-
-
-
-
 
 def check_collision(buble_missile_list, sound_missile_list):
     buble_missiles_to_remove = []

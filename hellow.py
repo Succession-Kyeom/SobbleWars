@@ -2,7 +2,7 @@ import pygame
 import sys
 import os
 import time
-
+from fever import fevertime
 
 def image_scaling(self):
     size = 8/3
@@ -204,7 +204,7 @@ def GameStart():
 
         current_time = time.time()
 
-        time_script = "{}".format((int)(40 - current_time + timer))
+        time_script = "{}".format((int)(30 - current_time + timer))
         text_surface = font.render(time_script, True, (0, 0, 0))  # 검은색 텍스트 렌더링
 
         for event in pygame.event.get():
@@ -336,6 +336,9 @@ def GameStart():
 
         for i, _ in enumerate(lifescore_list2):
             screen.blit(image_lifescore, (1200 - i * 80, 26))  # y 좌표를 다르게 해서 겹치지 않게 설정
+
+        if timer == 0:
+            fevertime(lifescore_count1, lifescore_count2, y1, y2)
 
         pygame.display.update()  # 화면 업데이트하기
         clock.tick(60)  # 프레임 레이트 설정하기
