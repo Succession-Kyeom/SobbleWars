@@ -159,14 +159,16 @@ def check_collision(buble_missile_list, sound_missile_list):
                     sound_buble_explosion.play()
                     break
 
-#경기 타이머
-timer = time.time()
-time_script = ''
+
 
 def GameStart():
     # 초기 위치 설정
     x1, y1 = 0, 320
     x2, y2 = 1040, 320
+
+    # 경기 타이머
+    timer = time.time()
+    time_script = ''
 
     # 라이프스코어 리스트 초기화
     lifescore_list1 = [image_lifescore, image_lifescore, image_lifescore, image_lifescore, image_lifescore]
@@ -203,8 +205,9 @@ def GameStart():
     while lifescore_count1 and lifescore_count2 > 0:
 
         current_time = time.time()
+        last = 30 - current_time + timer
 
-        time_script = "{}".format((int)(30 - current_time + timer))
+        time_script = "{}".format((int)(last))
         text_surface = font.render(time_script, True, (0, 0, 0))  # 검은색 텍스트 렌더링
 
         for event in pygame.event.get():
@@ -337,8 +340,9 @@ def GameStart():
         for i, _ in enumerate(lifescore_list2):
             screen.blit(image_lifescore, (1200 - i * 80, 26))  # y 좌표를 다르게 해서 겹치지 않게 설정
 
-        if timer == 0:
+        if last <= 0:
             fevertime(lifescore_count1, lifescore_count2, y1, y2)
+            last = 30
 
         pygame.display.update()  # 화면 업데이트하기
         clock.tick(60)  # 프레임 레이트 설정하기
