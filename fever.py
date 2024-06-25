@@ -3,11 +3,11 @@ import sys
 import os
 import time
 
-
 def image_scaling(self):
-    size = 8/3
+    size = 8 / 3
     self = pygame.transform.scale(self, (int(self.get_width() * size), int(self.get_height() * size)))
     return self
+
 def image_load():
     global image_background
     global image_buble
@@ -17,8 +17,6 @@ def image_load():
     global image_sound_missile1
     global image_sound_missile2
     global image_lifescore
-    global image_winLose
-    global image_loseWin
 
     # 현재 스크립트 파일의 디렉토리 경로 얻기
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -32,8 +30,6 @@ def image_load():
     image_sound_missile1_path = os.path.join(script_dir, 'image', 'sound_missile1.png')
     image_sound_missile2_path = os.path.join(script_dir, 'image', 'sound_missile2.png')
     image_lifescore_path = os.path.join(script_dir, 'image', 'lifescore.png')
-    image_winLose_path = os.path.join(script_dir, 'image', 'winlose.png')
-    image_loseWin_path = os.path.join(script_dir, 'image', 'losewin.png')
 
     # 이미지 로드하기
     try:
@@ -45,8 +41,6 @@ def image_load():
         image_sound_missile1 = pygame.image.load(image_sound_missile1_path)
         image_sound_missile2 = pygame.image.load(image_sound_missile2_path)
         image_lifescore = pygame.image.load(image_lifescore_path)
-        image_winLose = pygame.image.load(image_winLose_path)
-        image_loseWin = pygame.image.load(image_loseWin_path)
     except FileNotFoundError as e:
         print(e)
         sys.exit()
@@ -58,8 +52,6 @@ def image_load():
     image_sound_missile1 = image_scaling(image_sound_missile1)
     image_sound_missile2 = image_scaling(image_sound_missile2)
     image_lifescore = image_scaling(image_lifescore)
-    image_winLose = image_scaling(image_winLose)
-    image_loseWin = image_scaling(image_loseWin)
 
 def sound_load():
     global sound_buble_explosion
@@ -67,15 +59,14 @@ def sound_load():
     global sound_buble_creation
     global sound_sound_creation
 
-
     # 현재 스크립트 파일의 디렉토리 경로 얻기
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
     # 상대 경로를 절대 경로로 변환하기
-    sound_buble_explosion_path = os.path.join(script_dir,'sound', 'buble_explosion.wav')
-    sound_sound_explosion_path = os.path.join(script_dir,'sound','sound_explosion.wav')
-    sound_buble_creation_path = os.path.join(script_dir,'sound', 'buble_creation.wav')
-    sound_sound_creation_path = os.path.join(script_dir,'sound','sound_creation.wav')
+    sound_buble_explosion_path = os.path.join(script_dir, 'sound', 'buble_explosion.wav')
+    sound_sound_explosion_path = os.path.join(script_dir, 'sound', 'sound_explosion.wav')
+    sound_buble_creation_path = os.path.join(script_dir, 'sound', 'buble_creation.wav')
+    sound_sound_creation_path = os.path.join(script_dir, 'sound', 'sound_creation.wav')
 
     # 사운드 로드하기
     try:
@@ -88,15 +79,16 @@ def sound_load():
     except FileNotFoundError as e:
         print(e)
         sys.exit()
+
 def font_load():
     global font
-    
+
     # 현재 스크립트 파일의 디렉토리 경로 얻기
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    
+
     # 상대 경로를 절대 경로로 변환하기
     font_path = os.path.join(script_dir, 'fonts', 'myfont.ttf')
-    
+
     # 폰트 로드하기
     try:
         font = pygame.font.Font(font_path, 60)  # 폰트 크기를 30으로 설정
@@ -112,13 +104,14 @@ class Missile:
         self.image = image
         self.rect = self.image.get_rect(topleft=(x, y))
         self.type = missile_type
-    
+
     def move(self):
         self.x += self.speed
         self.rect.x = self.x
-    
+
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
+
 
 # 파이게임 초기화하기
 pygame.init()
@@ -131,6 +124,7 @@ clock = pygame.time.Clock()
 image_load()
 sound_load()
 font_load()
+
 
 # 충돌 감지 함수
 def check_collision(buble_missile_list, sound_missile_list):
@@ -155,13 +149,15 @@ def check_collision(buble_missile_list, sound_missile_list):
 
                     break
                 elif b_missile.type == 'buble_missile1' and s_missile.type == 'sound_missile2':
-                    buble_missile_list.remove(b_missile) 
+                    buble_missile_list.remove(b_missile)
                     sound_buble_explosion.play()
                     break
 
-#경기 타이머
+
+# 경기 타이머
 timer = time.time()
 time_script = ''
+
 
 def GameStart():
     # 초기 위치 설정
@@ -200,7 +196,7 @@ def GameStart():
     invinsible_count2 = 0
     # 메인 루프 시작하기
     running = True
-    while lifescore_count1 and lifescore_count2 > 0:
+    while running:
 
         current_time = time.time()
 
@@ -212,7 +208,7 @@ def GameStart():
                 running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w and y1 > 80:
-                    y1 -= 240 # w를 누르면 위로 이동
+                    y1 -= 240  # w를 누르면 위로 이동
 
                 elif event.key == pygame.K_s and y1 < 560:
                     y1 += 240  # s를 누르면 아래로 이동
@@ -238,19 +234,21 @@ def GameStart():
                     sound_sound_creation.play()
                     Missile_x = x2
                     Missile_y = y2 + 45
-                    sound_missile_list.append(Missile(Missile_x, Missile_y, -13, image_sound_missile1, 'sound_missile1'))
+                    sound_missile_list.append(
+                        Missile(Missile_x, Missile_y, -13, image_sound_missile1, 'sound_missile1'))
                     last_sound_missile1_time = current_time
 
                 if event.key == pygame.K_RIGHT and (current_time - last_sound_missile2_time) >= 1.0:
                     sound_sound_creation.play()
                     Missile_x = x2
                     Missile_y = y2 + 14
-                    sound_missile_list.append(Missile(Missile_x, Missile_y, -13, image_sound_missile2, 'sound_missile2'))
+                    sound_missile_list.append(
+                        Missile(Missile_x, Missile_y, -13, image_sound_missile2, 'sound_missile2'))
                     last_sound_missile2_time = current_time
 
         screen.fill((255, 255, 255))  # 배경색상 설정하기
         screen.blit(image_background, (0, 0))  # 배경 그리기
-        screen.blit(text_surface, ((image_background.get_width() - text_surface.get_width())/2, 26))
+        screen.blit(text_surface, ((image_background.get_width() - text_surface.get_width()) / 2, 26))
 
         screen.blit(image_buble, (x1, y1))  # 이미지를 새로운 위치에 그리기
         screen.blit(image_sound, (x2, y2))  # 다른 이미지를 새로운 위치에 그리기
@@ -274,13 +272,12 @@ def GameStart():
                 new_buble_missile_list.append(missile)
             else:
                 lifescore_count2 -= 1
-                if (len(lifescore_list2) != 0)and(current_time - lifescore_time2 > 1.5):
+                if (len(lifescore_list2) != 0) and (current_time - lifescore_time2 > 1.5):
                     lifescore_list2.pop()
                     lifescore_time2 = current_time
                     invinsible_state2 = 1
                     invinsible_time2 = current_time
                     image_sound.set_alpha(168)
-
 
         new_sound_missile_list = []
         for missile in sound_missile_list:
@@ -288,7 +285,7 @@ def GameStart():
                 new_sound_missile_list.append(missile)
             else:
                 lifescore_count1 -= 1
-                if (len(lifescore_list1) != 0)and(current_time - lifescore_time1 >= 1.6):
+                if (len(lifescore_list1) != 0) and (current_time - lifescore_time1 >= 1.6):
                     lifescore_list1.pop()
                     lifescore_time1 = current_time
                     invinsible_state1 = 1
@@ -296,33 +293,33 @@ def GameStart():
                     image_buble.set_alpha(168)
 
         if invinsible_state1 == 1:
-            if (invinsible_count1%2 == 0)and(current_time - invinsible_time1 >= 0.4):
+
+            if (invinsible_count1 % 2 == 0) and (current_time - invinsible_time1 >= 0.4):
                 image_buble.set_alpha(255)
                 invinsible_count1 += 1
                 invinsible_time1 = current_time
 
-                if (invinsible_count1%3 == 0):
+                if (invinsible_count1 % 3 == 0):
                     invinsible_state1 = 0
                     invinsible_count1 = 0
 
-            elif (invinsible_count1%2 == 1)and(current_time - invinsible_time1 >= 0.4):
+            elif (invinsible_count1 % 2 == 1) and (current_time - invinsible_time1 >= 0.4):
                 image_buble.set_alpha(168)
                 invinsible_count1 += 1
                 invinsible_time1 = current_time
 
-
         if invinsible_state2 == 1:
 
-            if (invinsible_count2%2 == 0)and(current_time - invinsible_time2 >= 0.4):
+            if (invinsible_count2 % 2 == 0) and (current_time - invinsible_time2 >= 0.4):
                 image_sound.set_alpha(255)
                 invinsible_count2 += 1
                 invinsible_time2 = current_time
 
-                if (invinsible_count2%3 == 0):
+                if (invinsible_count2 % 3 == 0):
                     invinsible_state2 = 0
                     invinsible_count2 = 0
 
-            elif (invinsible_count2%2 == 1)and(current_time - invinsible_time2 >= 0.4):
+            elif (invinsible_count2 % 2 == 1) and (current_time - invinsible_time2 >= 0.4):
                 image_sound.set_alpha(168)
                 invinsible_count2 += 1
                 invinsible_time2 = current_time
@@ -339,12 +336,3 @@ def GameStart():
 
         pygame.display.update()  # 화면 업데이트하기
         clock.tick(60)  # 프레임 레이트 설정하기
-
-    if lifescore_count1 == 0:
-        screen.blit(image_loseWin, (0, 0))
-        pygame.display.update()
-        time.sleep(5)
-    elif lifescore_count2 == 0:
-        screen.blit(image_winLose, (0, 0))
-        pygame.display.update()
-        time.sleep(5)
