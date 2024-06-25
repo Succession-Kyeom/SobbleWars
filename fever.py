@@ -91,7 +91,7 @@ def sound_load():
     global sound_sound_explosion
     global sound_buble_creation
     global sound_sound_creation
-
+    global chipi
 
     # 현재 스크립트 파일의 디렉토리 경로 얻기
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -101,6 +101,7 @@ def sound_load():
     sound_sound_explosion_path = os.path.join(script_dir,'sound','sound_explosion.wav')
     sound_buble_creation_path = os.path.join(script_dir,'sound', 'buble_creation.wav')
     sound_sound_creation_path = os.path.join(script_dir,'sound','sound_creation.wav')
+    chipi_path = os.path.join(script_dir, 'sound', '치피치피.mp3')
 
     # 사운드 로드하기
     try:
@@ -109,6 +110,7 @@ def sound_load():
         sound_sound_explosion = pygame.mixer.Sound(sound_sound_explosion_path)
         sound_buble_creation = pygame.mixer.Sound(sound_buble_creation_path)
         sound_sound_creation = pygame.mixer.Sound(sound_sound_creation_path)
+        chipi = pygame.mixer.Sound(chipi_path)
 
     except FileNotFoundError as e:
         print(e)
@@ -208,6 +210,8 @@ def check_collision(buble_missile_list, sound_missile_list):
 timer = time.time()
 
 def fevertime(life1, life2, y0, y): #y0 는 y1 y는 y2
+    pygame.mixer.pause()
+    chipi.play()
     Tick = 1
     initialize_timer(10)
 
@@ -218,8 +222,13 @@ def fevertime(life1, life2, y0, y): #y0 는 y1 y는 y2
     # 라이프스코어 리스트 초기화
     lifescore_list1 = [image_lifescore, image_lifescore, image_lifescore, image_lifescore, image_lifescore]
     lifescore_count1 = life1
+    for x in range(5 - lifescore_count1):
+        lifescore_list1.pop()
+
     lifescore_list2 = [image_lifescore, image_lifescore, image_lifescore, image_lifescore, image_lifescore]
     lifescore_count2 = life2
+    for x in range(5 - lifescore_count2):
+        lifescore_list2.pop()
 
     # 미사일 리스트 초기화
     buble_missile_list = []
@@ -248,16 +257,12 @@ def fevertime(life1, life2, y0, y): #y0 는 y1 y는 y2
 
     timer = time.time()
 
-
-
     # 메인 루프 시작하기
     running = True
     while running:
 
         current_time = time.time()
-
         i = (int)(10 - current_time + timer)
-
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -335,8 +340,8 @@ def fevertime(life1, life2, y0, y): #y0 는 y1 y는 y2
             if missile.x < 1280:
                 new_buble_missile_list.append(missile)
             else:
-                lifescore_count2 -= 1
                 if (len(lifescore_list2) != 0)and(current_time - lifescore_time2 > 1.5):
+                    lifescore_count2 -= 1
                     lifescore_list2.pop()
                     lifescore_time2 = current_time
                     invinsible_state2 = 1
@@ -349,8 +354,8 @@ def fevertime(life1, life2, y0, y): #y0 는 y1 y는 y2
             if missile.x > 0:
                 new_sound_missile_list.append(missile)
             else:
-                lifescore_count1 -= 1
                 if (len(lifescore_list1) != 0)and(current_time - lifescore_time1 >= 1.6):
+                    lifescore_count1 -= 1
                     lifescore_list1.pop()
                     lifescore_time1 = current_time
                     invinsible_state1 = 1
@@ -373,7 +378,6 @@ def fevertime(life1, life2, y0, y): #y0 는 y1 y는 y2
                 invinsible_count1 += 1
                 invinsible_time1 = current_time
 
-
         if invinsible_state2 == 1:
 
             if (invinsible_count2%2 == 0)and(current_time - invinsible_time2 >= 0.4):
@@ -394,16 +398,16 @@ def fevertime(life1, life2, y0, y): #y0 는 y1 y는 y2
         sound_missile_list = new_sound_missile_list
 
         # 생명 이미지 그리기
-        for i, _ in enumerate(lifescore_list1):
-            screen.blit(image_lifescore, (26 + i * 80, 26))
+        for ii, _ in enumerate(lifescore_list1):
+            screen.blit(image_lifescore, (26 + ii * 80, 26))
 
-        for i, _ in enumerate(lifescore_list2):
-            screen.blit(image_lifescore, (1200 - i * 80, 26))  # y 좌표를 다르게 해서 겹치지 않게 설정
+        for ii, _ in enumerate(lifescore_list2):
+            screen.blit(image_lifescore, (1200 - ii * 80, 26))  # y 좌표를 다르게 해서 겹치지 않게 설정
 
         pygame.display.update()  # 화면 업데이트하기
         clock.tick(60)  # 프레임 레이트 설정하기    
         Tick += 1
 
-        if i < 0:
-            running = False
-
+        if i <= 0:
+            chipi.stop()
+            return lifescore_count1, lifescore_count2, y1, y2

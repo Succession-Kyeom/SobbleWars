@@ -30,37 +30,48 @@ screen = pygame.display.set_mode(size)
 pygame.display.set_caption("소음을 부르는 광기의 비눗방울 대전쟁")
 
 #이미지 로드 및 크기 설정
+directory = os.path.dirname(os.path.abspath(__file__))
 
-startImage = pygame.image.load("C:image\\start_btn.png")
-startImageOn = pygame.image.load("C:image\\start_onmouse.png")
-startImageClick = pygame.image.load("C:image\\start_clicked.png")
+startImage_path = os.path.join(directory, 'image', 'start_btn.png')
+startImage = pygame.image.load(startImage_path)
+startImageOn_path = os.path.join(directory, 'image', 'start_onmouse.png')
+startImageOn = pygame.image.load(startImageOn_path)
+startImageClick_path = os.path.join(directory, 'image', 'start_clicked.png')
+startImageClick = pygame.image.load(startImageClick_path)
 start = (startImage, startImageOn, startImageClick)
 startSize = start[0].get_size()
 
-aboutImage = pygame.image.load("C:image\\about_btn.png")
-aboutImageOn = pygame.image.load("C:image\\about_onmouse.png")
-aboutImageClick = pygame.image.load("C:image\\about_clicked.png")
+aboutImage_path = os.path.join(directory, 'image', 'about_btn.png')
+aboutImage = pygame.image.load(aboutImage_path)
+aboutImageOn_path = os.path.join(directory, 'image', 'about_onmouse.png')
+aboutImageOn = pygame.image.load(aboutImageOn_path)
+aboutImageClick_path = os.path.join(directory, 'image', 'about_clicked.png')
+aboutImageClick = pygame.image.load(aboutImageClick_path)
 about = (aboutImage, aboutImageOn, aboutImageClick)
 aboutSize = about[0].get_size()
 
-story1 = pygame.image.load("C:image\\story1.png")
+story1_path = os.path.join(directory, 'image', 'story1.png')
+story1 = pygame.image.load(story1_path)
 story1 = pygame.transform.scale(story1, (1280, 720))
 
-story2 = pygame.image.load("C:image\\story2.png")
+story2_path = os.path.join(directory, 'image', 'story2.png')
+story2 = pygame.image.load(story2_path)
 story2 = pygame.transform.scale(story2, (1280, 720))
 
-story3 = pygame.image.load("C:image\\story3.png")
+story3_path = os.path.join(directory, 'image', 'story3.png')
+story3 = pygame.image.load(story3_path)
 story3 = pygame.transform.scale(story3, (1280, 720))
 
-story4 = pygame.image.load("C:image\\story4.png")
+story4_path = os.path.join(directory, 'image', 'story4.png')
+story4 = pygame.image.load(story4_path)
 story4 = pygame.transform.scale(story4, (1280, 720))
 
-story5 = pygame.image.load("C:image\\story5.png")
+story5_path = os.path.join(directory, 'image', 'story5.png')
+story5 = pygame.image.load(story5_path)
 story5 = pygame.transform.scale(story5, (1280, 720))
 
 story = [story1, story2, story3, story4, story5]
 
-directory = os.path.dirname(os.path.abspath(__file__))
 title1Path = os.path.join(directory, 'image', 'title1.png')
 title2Path = os.path.join(directory, 'image', 'title2.png')
 title3Path = os.path.join(directory, 'image', 'title3.png')
@@ -71,7 +82,8 @@ title7Path = os.path.join(directory, 'image', 'title7.png')
 title8Path = os.path.join(directory, 'image', 'title8.png')
 title9Path = os.path.join(directory, 'image', 'title9.png')
 title10Path = os.path.join(directory, 'image', 'title10.png')
-
+aboutPath = os.path.join(directory, 'image', 'about.png')
+bgm = os.path.join(directory, 'sound', 'dragon castle.mp3')
 try:
     title1 = pygame.image.load(title1Path)
     title2 = pygame.image.load(title2Path)
@@ -83,6 +95,8 @@ try:
     title8 = pygame.image.load(title8Path)
     title9 = pygame.image.load(title9Path)
     title10 = pygame.image.load(title10Path)
+    about = pygame.image.load(aboutPath)
+    bgm = pygame.mixer.Sound(bgm)
 except FileNotFoundError as e:
     print(e)
     sys.exit()
@@ -113,14 +127,18 @@ def Quit():
 
 def HowToPlay():
     while(True):
-        pygame.display.update()
+        screen.blit(about, (0, 0))
+        time.sleep(5)
+        return
 ############
 
+bgm.play()
 ##메인 루프
 while(roop):
     alpha = 0
     result = 0
     clock.tick(60)
+    pygame.mixer.init()
 
     font = pygame.font.SysFont(None, 50)
     #이벤트 감지
@@ -170,9 +188,10 @@ while(roop):
         pygame.display.update()
         state = 2
     elif state == 2:
+        pygame.mixer.unpause()
         screen.blit(title10, (0, 0))
         startButton = Button(start[0], start[1], start[2], 1100, 570, startSize[0], startSize[1], state, result, GameStart)
-        aboutButton = Button(about[0], about[1], about[2], 1100, 630, aboutSize[0], aboutSize[1], state, None, HowToPlay)
+        #aboutButton = Button(about[0], about[1], about[2], 1100, 630, aboutSize[0], aboutSize[1], state, None, HowToPlay)
 
     #*중요* 화면 업데이트
     pygame.display.update()

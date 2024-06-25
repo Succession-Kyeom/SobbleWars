@@ -66,7 +66,7 @@ def sound_load():
     global sound_sound_explosion
     global sound_buble_creation
     global sound_sound_creation
-
+    global win
 
     # 현재 스크립트 파일의 디렉토리 경로 얻기
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -76,6 +76,7 @@ def sound_load():
     sound_sound_explosion_path = os.path.join(script_dir,'sound','sound_explosion.wav')
     sound_buble_creation_path = os.path.join(script_dir,'sound', 'buble_creation.wav')
     sound_sound_creation_path = os.path.join(script_dir,'sound','sound_creation.wav')
+    winPath = os.path.join(script_dir, 'sound', '승리.wav')
 
     # 사운드 로드하기
     try:
@@ -84,6 +85,7 @@ def sound_load():
         sound_sound_explosion = pygame.mixer.Sound(sound_sound_explosion_path)
         sound_buble_creation = pygame.mixer.Sound(sound_buble_creation_path)
         sound_sound_creation = pygame.mixer.Sound(sound_sound_creation_path)
+        win = pygame.mixer.Sound(winPath)
 
     except FileNotFoundError as e:
         print(e)
@@ -162,6 +164,8 @@ def check_collision(buble_missile_list, sound_missile_list):
 
 
 def GameStart():
+    global win
+
     # 초기 위치 설정
     x1, y1 = 0, 320
     x2, y2 = 1040, 320
@@ -203,7 +207,7 @@ def GameStart():
     # 메인 루프 시작하기
     running = True
     while lifescore_count1 and lifescore_count2 > 0:
-
+        pygame.mixer.unpause()
         current_time = time.time()
         last = 30 - current_time + timer
 
@@ -276,8 +280,10 @@ def GameStart():
             if missile.x < 1280:
                 new_buble_missile_list.append(missile)
             else:
-                lifescore_count2 -= 1
-                if (len(lifescore_list2) != 0)and(current_time - lifescore_time2 > 1.5):
+
+
+                if (lifescore_count2 != 0)and(current_time - lifescore_time2 > 1.5):
+                    lifescore_count2 -= 1
                     lifescore_list2.pop()
                     lifescore_time2 = current_time
                     invinsible_state2 = 1
@@ -290,8 +296,8 @@ def GameStart():
             if missile.x > 0:
                 new_sound_missile_list.append(missile)
             else:
-                lifescore_count1 -= 1
                 if (len(lifescore_list1) != 0)and(current_time - lifescore_time1 >= 1.6):
+                    lifescore_count1 -= 1
                     lifescore_list1.pop()
                     lifescore_time1 = current_time
                     invinsible_state1 = 1
@@ -341,17 +347,26 @@ def GameStart():
             screen.blit(image_lifescore, (1200 - i * 80, 26))  # y 좌표를 다르게 해서 겹치지 않게 설정
 
         if last <= 0:
-            fevertime(lifescore_count1, lifescore_count2, y1, y2)
-            last = 30
+            temp1, temp2 = lifescore_count1, lifescore_count2
+            lifescore_count1, lifescore_count2, y1, y2 = fevertime(lifescore_count1, lifescore_count2, y1, y2)
+            timer = time.time()
+            for x in range(temp1 - lifescore_count1):
+                lifescore_list1.pop()
+            for x in range(temp2 - lifescore_count2):
+                lifescore_count2
 
         pygame.display.update()  # 화면 업데이트하기
         clock.tick(60)  # 프레임 레이트 설정하기
 
     if lifescore_count1 == 0:
+        pygame.mixer.pause()
         screen.blit(image_loseWin, (0, 0))
+        win.play()
         pygame.display.update()
-        time.sleep(5)
+        time.sleep(6)
     elif lifescore_count2 == 0:
+        pygame.mixer.pause()
         screen.blit(image_winLose, (0, 0))
+        win.play()
         pygame.display.update()
-        time.sleep(5)
+        time.sleep(6)
