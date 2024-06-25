@@ -7,7 +7,7 @@ screen = pygame.display.set_mode(size)
 
 #버튼 클래스
 class Button:
-    def __init__(self, image, imageOn, imageClick, x, y, width, height, action=None):
+    def __init__(self, image, imageOn, imageClick, x, y, width, height, state, result=0, action=None):
         mouse = pygame.mouse.get_pos()  # 마우스 좌표 mouse = [mouse_x, mouse_y]
         click = pygame.mouse.get_pressed()  # 마우스 클릭 확인 click = [left, wheel, right]
         act = False
@@ -18,7 +18,8 @@ class Button:
             if click[0] and action != None:
                 act = True
                 screen.blit(imageClick, (x, y))
-#            if click[0] == 0 and act == True:
-                action()
+                result = action()
+            if result != 0:
+                state = 2
         else: #마우스 좌표가 버튼 외부일 때
             screen.blit(image, (x, y))

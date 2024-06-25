@@ -3,7 +3,7 @@ import sys
 import os
 import time
 
-from hellow import GameStart
+#from hellow import GameStart
 
 def image_scaling(self):
     size = 8/3
@@ -141,11 +141,6 @@ clock = pygame.time.Clock()
 # 이미지 로드하기
 image_load()
 sound_load()
-
-
-
-
-
 
 def check_collision(buble_missile_list, sound_missile_list):
     buble_missiles_to_remove = []
@@ -404,8 +399,6 @@ def fevertime(life1, life2, y0, y): #y0 는 y1 y는 y2
 
         for i, _ in enumerate(lifescore_list2):
             screen.blit(image_lifescore, (1200 - i * 80, 26))  # y 좌표를 다르게 해서 겹치지 않게 설정
-
-
 
         pygame.display.update()  # 화면 업데이트하기
         clock.tick(60)  # 프레임 레이트 설정하기    

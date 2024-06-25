@@ -2,7 +2,7 @@ import pygame
 import sys
 import os
 import time
-
+from fever import fevertime
 
 def image_scaling(self):
     size = 8/3
@@ -17,6 +17,8 @@ def image_load():
     global image_sound_missile1
     global image_sound_missile2
     global image_lifescore
+    global image_winLose
+    global image_loseWin
 
     # 현재 스크립트 파일의 디렉토리 경로 얻기
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -30,6 +32,8 @@ def image_load():
     image_sound_missile1_path = os.path.join(script_dir, 'image', 'sound_missile1.png')
     image_sound_missile2_path = os.path.join(script_dir, 'image', 'sound_missile2.png')
     image_lifescore_path = os.path.join(script_dir, 'image', 'lifescore.png')
+    image_winLose_path = os.path.join(script_dir, 'image', 'winlose.png')
+    image_loseWin_path = os.path.join(script_dir, 'image', 'losewin.png')
 
     # 이미지 로드하기
     try:
@@ -41,6 +45,8 @@ def image_load():
         image_sound_missile1 = pygame.image.load(image_sound_missile1_path)
         image_sound_missile2 = pygame.image.load(image_sound_missile2_path)
         image_lifescore = pygame.image.load(image_lifescore_path)
+        image_winLose = pygame.image.load(image_winLose_path)
+        image_loseWin = pygame.image.load(image_loseWin_path)
     except FileNotFoundError as e:
         print(e)
         sys.exit()
@@ -52,9 +58,8 @@ def image_load():
     image_sound_missile1 = image_scaling(image_sound_missile1)
     image_sound_missile2 = image_scaling(image_sound_missile2)
     image_lifescore = image_scaling(image_lifescore)
-
-
-
+    image_winLose = image_scaling(image_winLose)
+    image_loseWin = image_scaling(image_loseWin)
 
 def sound_load():
     global sound_buble_explosion
@@ -127,10 +132,6 @@ image_load()
 sound_load()
 font_load()
 
-
-
-
-
 # 충돌 감지 함수
 def check_collision(buble_missile_list, sound_missile_list):
     for b_missile in buble_missile_list[:]:
@@ -158,14 +159,16 @@ def check_collision(buble_missile_list, sound_missile_list):
                     sound_buble_explosion.play()
                     break
 
-#경기 타이머
-timer = time.time()
-time_script = ''
+
 
 def GameStart():
     # 초기 위치 설정
     x1, y1 = 0, 320
     x2, y2 = 1040, 320
+
+    # 경기 타이머
+    timer = time.time()
+    time_script = ''
 
     # 라이프스코어 리스트 초기화
     lifescore_list1 = [image_lifescore, image_lifescore, image_lifescore, image_lifescore, image_lifescore]
@@ -199,13 +202,13 @@ def GameStart():
     invinsible_count2 = 0
     # 메인 루프 시작하기
     running = True
-    while running:
+    while lifescore_count1 and lifescore_count2 > 0:
 
         current_time = time.time()
+        last = 30 - current_time + timer
 
-        time_script = "{}".format((int)(40 - current_time + timer))
+        time_script = "{}".format((int)(last))
         text_surface = font.render(time_script, True, (0, 0, 0))  # 검은색 텍스트 렌더링
-
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -296,7 +299,6 @@ def GameStart():
                     image_buble.set_alpha(168)
 
         if invinsible_state1 == 1:
-
             if (invinsible_count1%2 == 0)and(current_time - invinsible_time1 >= 0.4):
                 image_buble.set_alpha(255)
                 invinsible_count1 += 1
@@ -338,7 +340,18 @@ def GameStart():
         for i, _ in enumerate(lifescore_list2):
             screen.blit(image_lifescore, (1200 - i * 80, 26))  # y 좌표를 다르게 해서 겹치지 않게 설정
 
-
+        if last <= 0:
+            fevertime(lifescore_count1, lifescore_count2, y1, y2)
+            last = 30
 
         pygame.display.update()  # 화면 업데이트하기
         clock.tick(60)  # 프레임 레이트 설정하기
+
+    if lifescore_count1 == 0:
+        screen.blit(image_loseWin, (0, 0))
+        pygame.display.update()
+        time.sleep(5)
+    elif lifescore_count2 == 0:
+        screen.blit(image_winLose, (0, 0))
+        pygame.display.update()
+        time.sleep(5)
